@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://thebinaryclock.com
+
+# Sitemaps
+Sitemap: https://thebinaryclock.com/sitemap.xml
