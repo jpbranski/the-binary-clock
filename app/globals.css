@@ -11,10 +11,10 @@
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #000000;
-  --sidebar-bg: #ffffff;
-  --sidebar-border: #e5e5e5;
+  --background: #000000;
+  --foreground: #ffffff;
+  --sidebar-bg: #000000;
+  --sidebar-border: #333333;
 }
 
 [data-theme="dark"] {

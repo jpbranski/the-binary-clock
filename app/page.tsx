@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Clock from '@/components/Clock';
 import TimezoneList from '@/components/TimezoneList';
 import ThemeToggle from '@/components/ThemeToggle';
@@ -10,18 +10,14 @@ import Layout from '@/components/Layout';
 type Mode = 'individual' | 'compare';
 
 export default function Home() {
-  const [selectedTimezone, setSelectedTimezone] = useState<number>(0);
+  // Calculate local offset once at render
+  const localOffset = -new Date().getTimezoneOffset() / 60;
+
+  const [selectedTimezone, setSelectedTimezone] = useState<number>(localOffset);
   const [is24Hour, setIs24Hour] = useState<boolean>(false);
   const [mode, setMode] = useState<Mode>('individual');
-  const [compareTimezone1, setCompareTimezone1] = useState<number>(0);
+  const [compareTimezone1, setCompareTimezone1] = useState<number>(localOffset);
   const [compareTimezone2, setCompareTimezone2] = useState<number>(0);
-
-  // Auto-detect local timezone on mount
-  useEffect(() => {
-    const localOffset = -new Date().getTimezoneOffset() / 60;
-    setSelectedTimezone(localOffset);
-    setCompareTimezone1(localOffset);
-  }, []);
 
   const getTimezoneLabel = (offset: number): string => {
     if (offset === 0) return 'UTC+0 (Zulu)';
@@ -53,7 +49,7 @@ export default function Home() {
         {/* Top Controls */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-12">
           <div className="flex flex-wrap items-center gap-4">
-            <ThemeToggle />
+            {/* <ThemeToggle /> */}
             <Toggle
               label1="12h"
               label2="24h"
@@ -149,12 +145,10 @@ export default function Home() {
               <p className="text-lg md:text-xl">
                 <span className="font-semibold text-[#c6a44c]">
                   {getTimezoneLabel(compareTimezone1)}
-                </span>
-                {' '}
+                </span>{' '}
                 <span className="text-gray-600 dark:text-gray-400">
                   {getOffsetDifference()}
-                </span>
-                {' '}
+                </span>{' '}
                 <span className="font-semibold text-[#c6a44c]">
                   {getTimezoneLabel(compareTimezone2)}
                 </span>

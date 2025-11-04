@@ -1,16 +1,26 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { Suspense } from "react";
 import Script from "next/script";
 import "./globals.css";
 import Analytics from "./analytics";
 
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "The Binary Clock - Luxury Time in Binary",
-  description: "For those whose time is too precious for decimals. The Binary Clock redefines punctuality — one bit at a time.",
+  description:
+    "For those whose time is too precious for decimals. The Binary Clock redefines punctuality — one bit at a time.",
   keywords: ["binary clock", "time", "timezone", "UTC", "luxury", "digital clock"],
   authors: [{ name: "The Binary Clock" }],
   openGraph: {
     title: "The Binary Clock",
-    description: "Luxury time in binary. For those whose time is too precious for decimals.",
+    description:
+      "Luxury time in binary. For those whose time is too precious for decimals.",
     type: "website",
   },
 };
@@ -23,12 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
+        {/* ✅ Google Analytics (only loads if GA_ID exists) */}
         {GA_ID && (
           <>
             <Script
@@ -47,12 +52,20 @@ export default function RootLayout({
             </Script>
           </>
         )}
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4062019424835259"
-          crossOrigin="anonymous"></script>
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4062019424835259"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
       </head>
-      <body className="antialiased">
+
+      <body className={`${inter.className} antialiased`}>
         {children}
-        <Analytics />
+
+        <Suspense fallback={null}>
+          <Analytics />
+        </Suspense>
       </body>
     </html>
   );
