@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import {
   Box,
   Button,
@@ -18,18 +17,20 @@ import {
 import Clock from '@/components/Clock';
 import TimezoneList from '@/components/TimezoneList';
 import Toggle from '@/components/Toggle';
-
-type Mode = 'individual' | 'compare';
+import { useTimezone } from '@/contexts/TimezoneContext';
 
 export default function HomePage() {
-  // Detect local timezone offset
-  const localOffset = -new Date().getTimezoneOffset() / 60;
-
-  const [selectedTimezone, setSelectedTimezone] = useState(localOffset);
-  const [is24Hour, setIs24Hour] = useState(false);
-  const [mode, setMode] = useState<Mode>('individual');
-  const [compareTimezone1, setCompareTimezone1] = useState(localOffset);
-  const [compareTimezone2, setCompareTimezone2] = useState(0);
+  const {
+    mode,
+    setMode,
+    selectedTimezone,
+    is24Hour,
+    setIs24Hour,
+    compareTimezone1,
+    setCompareTimezone1,
+    compareTimezone2,
+    setCompareTimezone2,
+  } = useTimezone();
 
   const getTimezoneLabel = (offset: number): string => {
     if (offset === 0) return 'UTC+0 (Zulu)';
