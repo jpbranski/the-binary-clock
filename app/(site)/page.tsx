@@ -12,6 +12,8 @@ import {
   ToggleButtonGroup,
   Typography,
   Paper,
+  Fade,
+  Collapse,
 } from '@mui/material';
 import Clock from '@/components/Clock';
 import TimezoneList from '@/components/TimezoneList';
@@ -88,7 +90,7 @@ export default function HomePage() {
       </Box>
 
       {/* Individual Mode */}
-      {mode === 'individual' && (
+      <Fade in={mode === 'individual'} timeout={500} unmountOnExit>
         <Box textAlign="center">
           <Typography
             variant="subtitle1"
@@ -105,10 +107,10 @@ export default function HomePage() {
 
           <Clock timezone={selectedTimezone} is24Hour={is24Hour} />
         </Box>
-      )}
+      </Fade>
 
       {/* Compare Mode */}
-      {mode === 'compare' && (
+      <Fade in={mode === 'compare'} timeout={500} unmountOnExit>
         <Box>
           {/* Selectors */}
           <Box
@@ -220,7 +222,7 @@ export default function HomePage() {
             ))}
           </Box>
         </Box>
-      )}
+      </Fade>
 
     </Box>
   );

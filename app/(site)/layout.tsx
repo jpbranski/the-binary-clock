@@ -189,6 +189,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
           overflowX: 'hidden',
           minWidth: 0,
           width: { xs: '100%', md: `calc(100% - ${drawerWidth}px)` },
+          ml: { xs: 0, md: `${drawerWidth}px` },
           display: 'flex',
           flexDirection: 'column',
           bgcolor: 'background.default',
