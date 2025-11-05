@@ -51,9 +51,10 @@ export default function Clock({ timezone, is24Hour }: ClockProps) {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        py: { xs: 4, md: 8 },
-        px: 2,
+        py: { xs: 2, sm: 3, md: 4 },
+        px: 1,
         textAlign: 'center',
+        width: '100%',
       }}
     >
       <Typography
@@ -66,7 +67,7 @@ export default function Clock({ timezone, is24Hour }: ClockProps) {
           display: 'flex',
           alignItems: 'center',
           flexWrap: 'nowrap',
-          fontSize: { xs: '1.8rem', sm: '2.6rem', md: '3rem', lg: '3.6rem' },
+          fontSize: { xs: 'clamp(1rem, 4vw, 1.8rem)', sm: 'clamp(1.8rem, 5vw, 2.6rem)', md: 'clamp(2rem, 3vw, 3rem)', lg: 'clamp(2.5rem, 3.5vw, 3.6rem)' },
           whiteSpace: 'nowrap',
           animation: `${pulse} 2s ease-in-out infinite`,
           textShadow: `0 0 6px ${theme.palette.primary.main}33`,
