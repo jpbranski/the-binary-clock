@@ -5,6 +5,7 @@ import Script from 'next/script';
 import './globals.css';
 import Analytics from './analytics';
 import ThemeProviderClient from '@/theme/ThemeProviderClient';
+import { TimezoneProvider } from '@/contexts/TimezoneContext';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -103,10 +104,12 @@ export default function RootLayout({
 
       <body className={`${inter.className} antialiased`}>
         <ThemeProviderClient>
-          {children}
-          <Suspense fallback={null}>
-            <Analytics />
-          </Suspense>
+          <TimezoneProvider>
+            {children}
+            <Suspense fallback={null}>
+              <Analytics />
+            </Suspense>
+          </TimezoneProvider>
         </ThemeProviderClient>
       </body>
     </html>

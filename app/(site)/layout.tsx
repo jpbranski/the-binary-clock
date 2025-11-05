@@ -19,6 +19,7 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import TimezoneList from '@/components/TimezoneList';
 import Footer from '@/components/Footer';
+import { useTimezone } from '@/contexts/TimezoneContext';
 
 const drawerWidth = 260;
 
@@ -58,8 +59,13 @@ function NavLink({ href, label }: { href: string; label: string }) {
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const localOffset = -new Date().getTimezoneOffset() / 60;
-  const [selectedTimezone, setSelectedTimezone] = useState(localOffset);
+  const { selectedTimezone, setSelectedTimezone, setMode } = useTimezone();
+
+  const handleTimezoneClick = (timezone: number) => {
+    setMode('individual');
+    setSelectedTimezone(timezone);
+    setMobileOpen(false); // Close mobile drawer after selection
+  };
 
   const sidebar = (
     <Box
@@ -100,7 +106,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <Box sx={{ flex: 1, overflowY: 'auto' }}>
         <TimezoneList
           selectedTimezone={selectedTimezone}
-          onSelectTimezone={setSelectedTimezone}
+          onSelectTimezone={handleTimezoneClick}
         />
       </Box>
     </Box>
