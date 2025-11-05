@@ -17,9 +17,8 @@ import {
   Typography,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import PublicIcon from '@mui/icons-material/Public';
+import TimezoneList from '@/components/TimezoneList';
+import Footer from '@/components/Footer';
 
 const drawerWidth = 260;
 
@@ -59,6 +58,8 @@ function NavLink({ href, label }: { href: string; label: string }) {
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const localOffset = -new Date().getTimezoneOffset() / 60;
+  const [selectedTimezone, setSelectedTimezone] = useState(localOffset);
 
   const sidebar = (
     <Box
@@ -93,36 +94,13 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
         <NavLink href="/learn" label="Learn" />
       </List>
 
-      <Divider sx={{ mt: 'auto', mb: 2 }} />
+      <Divider sx={{ mb: 2 }} />
 
-      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 'auto' }}>
-        <IconButton
-          href="https://github.com/jpbranski"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="GitHub"
-          sx={{ color: 'primary.main' }}
-        >
-          <GitHubIcon />
-        </IconButton>
-        <IconButton
-          href="https://linkedin.com/in/jpbranski"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="LinkedIn"
-          sx={{ color: 'primary.main' }}
-        >
-          <LinkedInIcon />
-        </IconButton>
-        <IconButton
-          href="https://jpbranski.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Website"
-          sx={{ color: 'primary.main' }}
-        >
-          <PublicIcon />
-        </IconButton>
+      <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
+        <TimezoneList
+          selectedTimezone={selectedTimezone}
+          onSelectTimezone={setSelectedTimezone}
+        />
       </Box>
     </Box>
   );
@@ -215,16 +193,13 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
           py: { xs: 10, md: 4 },
           bgcolor: 'background.default',
           display: 'flex',
-          justifyContent: 'center',
+          flexDirection: 'column',
+          alignItems: 'center',
         }}
       >
-        <Box
-          sx={{
-            width: '100%',
-            maxWidth: { xs: '100%', md: 'calc(100vw - 300px)' },
-          }}
-        >
+        <Box sx={{ width: '100%', maxWidth: '1200px' }}>
           {children}
+          <Footer />
         </Box>
       </Box>
     </Box>

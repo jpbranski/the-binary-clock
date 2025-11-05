@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import {
   Box,
-  Button,
   FormControl,
   InputLabel,
   MenuItem,
@@ -14,7 +13,6 @@ import {
   Paper,
 } from '@mui/material';
 import Clock from '@/components/Clock';
-import TimezoneList from '@/components/TimezoneList';
 import Toggle from '@/components/Toggle';
 
 type Mode = 'individual' | 'compare';
@@ -23,7 +21,6 @@ export default function HomePage() {
   // Detect local timezone offset
   const localOffset = -new Date().getTimezoneOffset() / 60;
 
-  const [selectedTimezone, setSelectedTimezone] = useState(localOffset);
   const [is24Hour, setIs24Hour] = useState(false);
   const [mode, setMode] = useState<Mode>('individual');
   const [compareTimezone1, setCompareTimezone1] = useState(localOffset);
@@ -67,14 +64,14 @@ export default function HomePage() {
           exclusive
           onChange={(_, newMode) => newMode && setMode(newMode)}
           sx={{
-            border: '1px solid rgba(198,164,76,0.3)',
-            borderRadius: '50px',
+            border: 'none',
             '& .MuiToggleButton-root': {
               textTransform: 'none',
               fontWeight: 500,
               px: 3,
               py: 1,
               color: 'text.secondary',
+              border: 'none',
             },
             '& .Mui-selected': {
               bgcolor: 'rgba(198,164,76,0.2)',
@@ -100,10 +97,10 @@ export default function HomePage() {
             variant="h4"
             sx={{ mb: 4, color: 'primary.main', fontWeight: 300, letterSpacing: 1 }}
           >
-            {getTimezoneLabel(selectedTimezone)}
+            {getTimezoneLabel(localOffset)}
           </Typography>
 
-          <Clock timezone={selectedTimezone} is24Hour={is24Hour} />
+          <Clock timezone={localOffset} is24Hour={is24Hour} />
         </Box>
       )}
 
@@ -186,19 +183,20 @@ export default function HomePage() {
           <Box
             sx={{
               display: 'flex',
-              flexDirection: { xs: 'column', md: 'row' },
-              alignItems: 'flex-start',
+              flexDirection: 'column',
+              alignItems: 'center',
               justifyContent: 'center',
-              gap: 8,
+              gap: 6,
               mt: 6,
               textAlign: 'center',
+              width: '100%',
             }}
           >
             {[compareTimezone1, compareTimezone2].map((tz, i) => (
               <Box
                 key={i}
                 sx={{
-                  flex: '1 1 400px',
+                  width: '100%',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
@@ -215,9 +213,7 @@ export default function HomePage() {
                 >
                   {getTimezoneLabel(tz)}
                 </Typography>
-                <Box sx={{ transform: 'scale(0.9)', transformOrigin: 'top center' }}>
-                  <Clock timezone={tz} is24Hour={is24Hour} />
-                </Box>
+                <Clock timezone={tz} is24Hour={is24Hour} />
               </Box>
             ))}
           </Box>
