@@ -92,6 +92,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
         <NavLink href="/" label="Home" />
         <NavLink href="/about" label="About" />
         <NavLink href="/learn" label="Learn" />
+        <NavLink href="/history" label="History" />
       </List>
 
       <Divider sx={{ mb: 2 }} />
