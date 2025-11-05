@@ -1,5 +1,16 @@
 'use client';
 
+import {
+  List,
+  ListItemButton,
+  ListItemText,
+  ListSubheader,
+  Typography,
+  Box,
+  Divider,
+} from '@mui/material';
+import { alpha } from '@mui/material/styles';
+
 interface TimezoneOption {
   offset: number;
   label: string;
@@ -39,28 +50,102 @@ const timezones: TimezoneOption[] = [
   { offset: 12, label: 'UTC+12', binaryLabel: '0000 1100' },
   { offset: 13, label: 'UTC+13', binaryLabel: '0000 1101' },
   { offset: 14, label: 'UTC+14', binaryLabel: '0000 1110' },
-  { offset: -11, label: 'AoE (UTC-12)', binaryLabel: '1111 0100' },
 ];
 
-export default function TimezoneList({ selectedTimezone, onSelectTimezone }: TimezoneListProps) {
+export default function TimezoneList({
+  selectedTimezone,
+  onSelectTimezone,
+}: TimezoneListProps) {
   return (
-    <div className="space-y-1 overflow-y-auto max-h-[60vh] pr-2">
-      {timezones.map((tz) => (
-        <button
-          key={`${tz.offset}-${tz.label}`}
-          onClick={() => onSelectTimezone(tz.offset)}
-          className={`w-full text-left px-4 py-2 rounded-lg transition-all duration-200 ${
-            selectedTimezone === tz.offset
-              ? 'bg-[#c6a44c] bg-opacity-20 text-[#c6a44c] border border-[#c6a44c]'
-              : 'hover:bg-[#c6a44c] hover:bg-opacity-10 border border-transparent'
-          }`}
-        >
-          <div className="flex flex-col">
-            <span className="text-sm font-medium">{tz.label}</span>
-            <span className="text-xs font-mono opacity-70">{tz.binaryLabel}</span>
-          </div>
-        </button>
-      ))}
-    </div>
+    <Box
+      sx={{
+        maxHeight: '60vh',
+        overflowY: 'auto',
+        pr: 1,
+        borderRadius: 2,
+        '&::-webkit-scrollbar': { width: 6 },
+        '&::-webkit-scrollbar-thumb': {
+          backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.4),
+          borderRadius: 6,
+        },
+      }}
+    >
+      <List
+        dense
+        subheader={
+          <ListSubheader
+            disableSticky
+            sx={{
+              bgcolor: 'background.paper',
+              color: 'primary.main',
+              fontWeight: 600,
+              letterSpacing: '0.05em',
+              fontSize: '0.85rem',
+              textTransform: 'uppercase',
+              mb: 1,
+            }}
+          >
+            Timezones
+          </ListSubheader>
+        }
+      >
+        {timezones.map((tz, idx) => {
+          const isActive = selectedTimezone === tz.offset;
+          return (
+            <ListItemButton
+              key={`${tz.offset}-${idx}`}
+              onClick={() => onSelectTimezone(tz.offset)}
+              selected={isActive}
+              sx={{
+                borderRadius: 1,
+                mb: 0.3,
+                px: 2,
+                py: 1,
+                '&.Mui-selected': {
+                  bgcolor: (theme) => alpha(theme.palette.primary.main, 0.2),
+                  border: (theme) =>
+                    `1px solid ${alpha(theme.palette.primary.main, 0.5)}`,
+                  '&:hover': {
+                    bgcolor: (theme) => alpha(theme.palette.primary.main, 0.3),
+                  },
+                },
+                '&:hover': {
+                  bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1),
+                },
+              }}
+            >
+              <ListItemText
+                primary={
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: isActive ? 500 : 400 }}
+                  >
+                    {tz.label}
+                  </Typography>
+                }
+                secondary={
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      fontFamily: 'JetBrains Mono, monospace',
+                      opacity: 0.6,
+                    }}
+                  >
+                    {tz.binaryLabel}
+                  </Typography>
+                }
+              />
+            </ListItemButton>
+          );
+        })}
+      </List>
+
+      <Divider
+        sx={{
+          mt: 1.5,
+          borderColor: (theme) => alpha(theme.palette.primary.main, 0.3),
+        }}
+      />
+    </Box>
   );
 }

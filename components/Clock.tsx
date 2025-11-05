@@ -1,100 +1,101 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { format, addHours } from 'date-fns';
+import { addHours } from 'date-fns';
+import { Box, Typography, useTheme, keyframes } from '@mui/material';
 
 interface ClockProps {
   timezone: number; // UTC offset in hours
   is24Hour: boolean;
 }
 
+// --- gentle gold pulse animation ---
+const pulse = keyframes`
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
+`;
+
 export default function Clock({ timezone, is24Hour }: ClockProps) {
-  const [time, setTime] = useState<Date>(new Date());
+  const [time, setTime] = useState(new Date());
+  const theme = useTheme();
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTime(new Date());
-    }, 1000);
-
+    const interval = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(interval);
   }, []);
 
-  const toBinary = (num: number, padding: number = 8): string => {
-    return num.toString(2).padStart(padding, '0');
-  };
+  const toBinary = (num: number, pad = 8) => num.toString(2).padStart(pad, '0');
+  const formatBinary = (b: string) => b.match(/.{1,4}/g)?.join(' ') ?? b;
 
-  const getAdjustedTime = () => {
-    // Get current UTC time
-    const utcTime = new Date(time.getTime() + time.getTimezoneOffset() * 60000);
-    // Add the selected timezone offset
-    return addHours(utcTime, timezone);
-  };
+  const utc = new Date(time.getTime() + time.getTimezoneOffset() * 60000);
+  const adjusted = addHours(utc, timezone);
 
-  const adjustedTime = getAdjustedTime();
-  let hours = adjustedTime.getHours();
-  const minutes = adjustedTime.getMinutes();
-  const seconds = adjustedTime.getSeconds();
-
+  let hours = adjusted.getHours();
+  const minutes = adjusted.getMinutes();
+  const seconds = adjusted.getSeconds();
   let period = '';
+
   if (!is24Hour) {
     period = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12 || 12;
   }
 
-  const hoursBinary = toBinary(hours, 8);
-  const minutesBinary = toBinary(minutes, 8);
-  const secondsBinary = toBinary(seconds, 8);
-
-  // Split into groups of 4 for better readability
-  const formatBinary = (binary: string): string => {
-    return binary.match(/.{1,4}/g)?.join(' ') || binary;
-  };
+  const hBin = formatBinary(toBinary(hours));
+  const mBin = formatBinary(toBinary(minutes));
+  const sBin = formatBinary(toBinary(seconds));
 
   return (
-    <div className="flex flex-col items-center justify-center space-y-8 py-12">
-      <div className="text-center space-y-4">
-        <div className="flex items-center justify-center gap-4 flex-wrap">
-          {/* Hours */}
-          <div className="flex flex-col items-center">
-            <div className="text-5xl md:text-7xl font-light tracking-wider text-[#c6a44c] font-mono">
-              {formatBinary(hoursBinary)}
-            </div>
-            <div className="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-2 uppercase tracking-widest">
-              Hours ({hours.toString().padStart(2, '0')})
-            </div>
-          </div>
-
-          <span className="text-5xl md:text-7xl font-light text-[#c6a44c]">:</span>
-
-          {/* Minutes */}
-          <div className="flex flex-col items-center">
-            <div className="text-5xl md:text-7xl font-light tracking-wider text-[#c6a44c] font-mono">
-              {formatBinary(minutesBinary)}
-            </div>
-            <div className="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-2 uppercase tracking-widest">
-              Minutes ({minutes.toString().padStart(2, '0')})
-            </div>
-          </div>
-
-          <span className="text-5xl md:text-7xl font-light text-[#c6a44c]">:</span>
-
-          {/* Seconds */}
-          <div className="flex flex-col items-center">
-            <div className="text-5xl md:text-7xl font-light tracking-wider text-[#c6a44c] font-mono">
-              {formatBinary(secondsBinary)}
-            </div>
-            <div className="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-2 uppercase tracking-widest">
-              Seconds ({seconds.toString().padStart(2, '0')})
-            </div>
-          </div>
-
-          {!is24Hour && (
-            <div className="text-3xl md:text-5xl font-light text-[#c6a44c] ml-2">
-              {period}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        py: { xs: 4, md: 8 },
+        px: 2,
+        textAlign: 'center',
+      }}
+    >
+      <Typography
+        variant="h3"
+        sx={{
+          fontFamily: 'JetBrains Mono, monospace',
+          fontWeight: 300,
+          letterSpacing: '0.15em',
+          color: theme.palette.primary.main,
+          display: 'flex',
+          alignItems: 'center',
+          flexWrap: 'nowrap',
+          fontSize: { xs: '1.8rem', sm: '2.6rem', md: '3rem', lg: '3.6rem' },
+          whiteSpace: 'nowrap',
+          animation: `${pulse} 2s ease-in-out infinite`,
+          textShadow: `0 0 6px ${theme.palette.primary.main}33`,
+        }}
+      >
+        {hBin}
+        <Box component="span" sx={{ mx: 1 }}>
+          :
+        </Box>
+        {mBin}
+        <Box component="span" sx={{ mx: 1 }}>
+          :
+        </Box>
+        {sBin}
+        {!is24Hour && (
+          <Box
+            component="span"
+            sx={{
+              ml: 1.5,
+              fontSize: { xs: '1.2rem', sm: '1.5rem', md: '2rem' },
+              color: theme.palette.primary.main,
+              fontWeight: 300,
+              opacity: 0.8,
+            }}
+          >
+            {period}
+          </Box>
+        )}
+      </Typography>
+    </Box>
   );
 }
